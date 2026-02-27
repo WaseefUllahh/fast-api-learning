@@ -1,7 +1,7 @@
 from fastapi import FastAPI  # import
 from typing import Optional
 from pydantic import BaseModel
-# import uvicorn
+import uvicorn
 
 app = FastAPI()  # this creates an instance of the FastAPI class, which is the main entry point for creating a FastAPI application. It allows you to define routes, handle requests, and manage the overall behavior of your API.
 
@@ -79,5 +79,5 @@ def create_blog(blog: Blog):
 # HOW TO DEBUG. we add a breakpoint applicationo will stop at that point and we can then debug.
 
 # How to chnage the port from default port:
-# if __name__ == "__main__":
-#     uvicorn.run(app, host="127.0.0.1", port=9000)
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=9000)
