@@ -1,4 +1,7 @@
 from fastapi import FastAPI  # import
+from typing import Optional
+from pydantic import BaseModel
+# import uvicorn
 
 app = FastAPI()  # this creates an instance of the FastAPI class, which is the main entry point for creating a FastAPI application. It allows you to define routes, handle requests, and manage the overall behavior of your API.
 
@@ -13,7 +16,7 @@ def index():  # function
 @app.get(
     "/blog"
 )  # this is the endpoint for getting all published blogs. when a GET request is made to this endpoint, the function published() will be executed and it will return a JSON response with the message "all published blogs".
-def index2(limit=10, published: bool = True):  #
+def index2(limit=10, published: bool = True, sort: Optional[str] = None):  #
     if published:
         return {"data": f"{limit} published blogs"}
     else:
@@ -47,10 +50,34 @@ def show(
 
 
 @app.get("/blog/{id}/comments")
-def comments(id):
+def comments(id, limit=10):
     # fetch comments of a blog with id = id
-    return {"data": {1, 2, 3, 5}}
+    return {
+        "data": {
+            1,
+            2,
+        }
+    }
 
 
 # we have to take good care when creating dynamic endpoints because if we have two endpoints like /blog/{id} and /blog/unpublished then when we try to access /blog/unpublished it will give error because it will try to match it with /blog/{id} and it will not find
 # any integer value for id and it will give error. so we have to make sure that we are not creating conflicting endpoints.
+
+
+class Blog(BaseModel):  # this is the model the blog model.
+    title: str
+    body: str
+    published: Optional[bool]
+
+
+# we use that  blog model in here and get the values from user to api.
+@app.post("/blog")
+def create_blog(blog: Blog):
+    return {"data": f"Blog is created with  title as {blog.title}"}
+
+
+# HOW TO DEBUG. we add a breakpoint applicationo will stop at that point and we can then debug.
+
+# How to chnage the port from default port:
+# if __name__ == "__main__":
+#     uvicorn.run(app, host="127.0.0.1", port=9000)
