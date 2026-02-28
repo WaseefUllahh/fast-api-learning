@@ -79,5 +79,5 @@ def create_blog(blog: Blog):
 # HOW TO DEBUG. we add a breakpoint applicationo will stop at that point and we can then debug.
 
 # How to chnage the port from default port:
-if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=9000)
+# if __name__ == "__main__":
+#     uvicorn.run(app, host="127.0.0.1", port=9000)
