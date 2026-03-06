@@ -3,13 +3,16 @@ from . import schemas, models
 from .database import engine, SessionLocal
 from sqlalchemy.orm import Session
 from typing import List
+from passlib.context import CryptContext
 
 app = FastAPI()
 
-models.Base.metadata.create_all(engine)
+models.Base.metadata.create_all(
+    engine
+)  # this means that whenever we find any model lets create that on database.
 
 
-def get_db():
+def get_db():  # Every request gets its own DB session
     db = SessionLocal()
     try:
         yield db
@@ -77,3 +80,20 @@ def show(id, response: Response, db: Session = Depends(get_db)):
             detail=f"Blog with the id {id} not found",
         )
     return blog
+
+
+pwd_cxt = CryptContext(["argon2"], deprecated="auto")
+
+
+@app.post("/user")
+def create_user(request: schemas.User, db: Session = Depends(get_db)):
+    print(f"password = {request.password}")
+    hashedPassword = pwd_cxt.hash(request.password)
+    print(request.password, type(request.password), len(request.password))
+    new_user = models.User(
+        name=request.name, email=request.email, password=hashedPassword
+    )
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return new_user

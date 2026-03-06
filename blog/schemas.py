@@ -12,6 +12,12 @@ class ShowBlog(BaseModel):
     body: str
 
     class Config:
-        from_attributes = True
+        from_attributes = True  # Convert SQLAlchemy object → JSON
 
     pass
+
+
+class User(BaseModel):
+    name: str
+    email: str
+    password: str
